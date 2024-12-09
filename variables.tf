@@ -14,3 +14,7 @@ variable "proxmox_host" {
 # variable "template_id" {
 #   default = 9000
 # }
+
+variable "username" {
+  default = "cloudinit"
+}
