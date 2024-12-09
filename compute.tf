@@ -9,10 +9,10 @@ resource "proxmox_virtual_environment_vm" "k8s-servers" {
     enabled = true
   }
 
-#   clone {
-#     vm_id = var.template_id
-#     full  = true
-#   }
+  #   clone {
+  #     vm_id = var.template_id
+  #     full  = true
+  #   }
 
   # keep the first disk as boot disk
   disk {
@@ -31,8 +31,8 @@ resource "proxmox_virtual_environment_vm" "k8s-servers" {
 
   # Cloud-Init configuration
   initialization {
-    interface           = "ide2"
-    type                = "nocloud"
+    interface         = "ide2"
+    type              = "nocloud"
     user_data_file_id = proxmox_virtual_environment_file.user_data_cloud_config.id
     ip_config {
       ipv4 {
@@ -47,7 +47,7 @@ resource "proxmox_virtual_environment_vm" "k8s-servers" {
 
     user_account {
       username = var.username
-      keys = [var.ssh_key]
+      keys     = [var.ssh_key]
     }
 
   }
