@@ -47,6 +47,7 @@ resource "proxmox_virtual_environment_vm" "k8s-servers" {
     }
 
     user_account {
+      username = var.username
       keys = [var.ssh_key]
     }
 
