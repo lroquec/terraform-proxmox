@@ -17,11 +17,10 @@ resource "proxmox_virtual_environment_vm" "k8s-servers" {
   # keep the first disk as boot disk
   disk {
     datastore_id = "local-lvm"
-    interface    = "scsi0"
+    interface    = "virtio0"
+    file_id      = proxmox_virtual_environment_download_file.ubuntu_cloud_image.id
     size         = 20
-    file_format  = "raw"
-    cache        = "writeback"
-    iothread     = false
+    iothread     = true
     ssd          = true
     discard      = "on"
   }
@@ -34,7 +33,7 @@ resource "proxmox_virtual_environment_vm" "k8s-servers" {
   initialization {
     interface           = "ide2"
     type                = "nocloud"
-    vendor_data_file_id = "local:snippets/kubeadm-cluster.yml"
+    user_data_file_id = proxmox_virtual_environment_file.user_data_cloud_config.id
     ip_config {
       ipv4 {
         address = "192.168.5.19${count.index + 1}/24"
@@ -55,5 +54,47 @@ resource "proxmox_virtual_environment_vm" "k8s-servers" {
 
   lifecycle {
     ignore_changes = [initialization["user_account"], ]
+  }
+}
+
+resource "proxmox_virtual_environment_download_file" "ubuntu_cloud_image" {
+  content_type = "iso"
+  datastore_id = "local"
+  node_name    = "pve"
+  url          = "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+}
+
+resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
+  content_type = "snippets"
+  datastore_id = "local"
+  node_name    = "pve"
+
+  source_raw {
+    data = <<-EOF
+      #cloud-config
+      users:
+      - name: laura
+         gecos: Laura
+         shell: /bin/bash
+         sudo: ALL=(ALL) NOPASSWD:ALL
+         lock_passwd: false
+      
+      chpasswd:
+      expire: true
+
+      preserve_hostname: false
+      manage_etc_hosts: true
+
+      runcmd:
+      - rm -f /etc/machine-id
+      - rm -f /var/lib/dbus/machine-id
+      - systemd-machine-id-setup
+      - rm -f /etc/ssh/ssh_host_*
+      - dpkg-reconfigure openssh-server
+      - apt update
+      - echo "done" > /tmp/cloud-config.done
+    EOF
+
+    file_name = "user-data.yml"
   }
 }
