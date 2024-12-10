@@ -19,3 +19,17 @@ variable "username" {
 variable "userpass" {
   default = "cloudinit"
 }
+
+variable "cores" {
+  default = 2
+  
+}
+
+variable "memory" {
+  default = 4096
+}
+
+variable "vm_count" {
+  default = 3
+  
+}
