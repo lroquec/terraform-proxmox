@@ -9,11 +9,6 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
     enabled = true
   }
 
-  #   clone {
-  #     vm_id = var.template_id
-  #     full  = true
-  #   }
-
   # keep the first disk as boot disk
   disk {
     datastore_id = "local-lvm"
