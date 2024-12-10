@@ -11,6 +11,7 @@ provider "proxmox" {
   insecure = true
   username = "root@pam"
   password = var.root_password
+
   ssh {
     agent       = false
     private_key = file("~/.ssh/id_ed25519")
