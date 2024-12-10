@@ -18,3 +18,7 @@ variable "proxmox_host" {
 variable "username" {
   default = "cloudinit"
 }
+
+variable "userpass" {
+  default = "cloudinit"
+}
