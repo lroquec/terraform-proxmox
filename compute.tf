@@ -1,7 +1,7 @@
 resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
-  count     = 3
+  count     = var.vm_count
   vm_id     = "80${count.index + 1}"
-  name      = "kubeadm-vm-${count.index + 1}"
+  name      = "vm-${count.index + 1}"
   node_name = var.proxmox_host
   tags      = ["terraform", "k8s"]
 
@@ -10,11 +10,11 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
   }
 
   cpu {
-    cores = 2
+    cores = var.cores
   }
 
   memory {
-    dedicated = 4096
+    dedicated = var.memory
   }
 
   # keep the first disk as boot disk
