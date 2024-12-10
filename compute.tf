@@ -9,6 +9,14 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
     enabled = true
   }
 
+  cpu {
+    cores = 2
+  }
+
+  memory {
+    dedicated = 4096
+  }
+
   # keep the first disk as boot disk
   disk {
     datastore_id = "local-lvm"
